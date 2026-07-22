@@ -33,23 +33,34 @@ def validate_items(items: list[dict[str, Any]]) -> None:
 
         required_fields = {"name", "price", "quantity"}
         missing_fields = required_fields - item.keys()
+
         if missing_fields:
             missing = ", ".join(sorted(missing_fields))
-            raise ValueError(f"Item {index} is missing required field(s): {missing}.")
+            raise ValueError(
+                f"Item {index} is missing required field(s): {missing}."
+            )
 
         if not isinstance(item["name"], str) or not item["name"].strip():
-            raise ValueError(f"Item {index} name must be a non-empty string.")
+            raise ValueError(
+                f"Item {index} name must be a non-empty string."
+            )
 
         price = _to_decimal(item["price"], f"Item {index} price")
+
         if price < 0:
             raise ValueError(f"Item {index} price cannot be negative.")
 
         quantity = item["quantity"]
+
         if isinstance(quantity, bool) or not isinstance(quantity, int):
-            raise ValueError(f"Item {index} quantity must be a whole number.")
+            raise ValueError(
+                f"Item {index} quantity must be a whole number."
+            )
 
         if quantity <= 0:
-            raise ValueError(f"Item {index} quantity must be greater than zero.")
+            raise ValueError(
+                f"Item {index} quantity must be greater than zero."
+            )
 
 
 def calculate_subtotal(items: list[dict[str, Any]]) -> Decimal:
@@ -57,6 +68,7 @@ def calculate_subtotal(items: list[dict[str, Any]]) -> Decimal:
     validate_items(items)
 
     subtotal = Decimal("0.00")
+
     for item in items:
         price = _to_decimal(item["price"], "Item price")
         subtotal += price * item["quantity"]
@@ -64,7 +76,10 @@ def calculate_subtotal(items: list[dict[str, Any]]) -> Decimal:
     return _money(subtotal)
 
 
-def apply_discount(subtotal: Decimal, discount_percent: Decimal | int | str) -> Decimal:
+def apply_discount(
+    subtotal: Decimal,
+    discount_percent: Decimal | int | str,
+) -> Decimal:
     """Calculate the discount amount for a subtotal."""
     subtotal = _to_decimal(subtotal, "Subtotal")
     discount = _to_decimal(discount_percent, "Discount percent")
@@ -79,7 +94,7 @@ def apply_discount(subtotal: Decimal, discount_percent: Decimal | int | str) -> 
 
 
 def calculate_shipping(subtotal: Decimal) -> Decimal:
-    """Apply feature-z premium shipping: free at $100.00, $6.50 from $60.00, otherwise $15.00."""
+    """Apply final shipping tiers: free at $100.00, $6.50 from $60.00, otherwise $15.00."""
     subtotal = _to_decimal(subtotal, "Subtotal")
 
     if subtotal < 0:
@@ -94,7 +109,10 @@ def calculate_shipping(subtotal: Decimal) -> Decimal:
     return Decimal("15.00")
 
 
-def calculate_tax(amount: Decimal, tax_rate: Decimal | int | str = Decimal("0.10")) -> Decimal:
+def calculate_tax(
+    amount: Decimal,
+    tax_rate: Decimal | int | str = Decimal("0.10"),
+) -> Decimal:
     """Calculate tax for a supplied amount."""
     amount = _to_decimal(amount, "Amount")
     tax_rate = _to_decimal(tax_rate, "Tax rate")
@@ -109,7 +127,8 @@ def calculate_tax(amount: Decimal, tax_rate: Decimal | int | str = Decimal("0.10
 
 
 def calculate_order_total(
-    items: list[dict[str, Any]], discount_percent: Decimal | int | str = 0
+    items: list[dict[str, Any]],
+    discount_percent: Decimal | int | str = 0,
 ) -> dict[str, Decimal]:
     """Calculate subtotal, discount, shipping, tax, and final total."""
     subtotal = calculate_subtotal(items)
