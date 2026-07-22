@@ -1,2 +1,5 @@
 # No third-party runtime dependencies are required yet.
 # The baseline PQS Order Calculator uses only the Python standard library.
+
+# Development/testing dependency:
+pytest
