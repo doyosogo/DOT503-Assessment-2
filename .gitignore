@@ -1,0 +1,29 @@
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Build outputs
+build/
+dist/
+*.egg-info/
+
+# Test and coverage caches
+.pytest_cache/
+.coverage
+htmlcov/
+
+# macOS files
+.DS_Store
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
