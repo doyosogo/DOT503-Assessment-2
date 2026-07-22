@@ -79,16 +79,19 @@ def apply_discount(subtotal: Decimal, discount_percent: Decimal | int | str) -> 
 
 
 def calculate_shipping(subtotal: Decimal) -> Decimal:
-    """Calculate a simple flat-rate shipping charge."""
+    """Apply feature-z premium shipping: free at $100.00, $6.50 from $60.00, otherwise $15.00."""
     subtotal = _to_decimal(subtotal, "Subtotal")
 
     if subtotal < 0:
         raise ValueError("Subtotal cannot be negative.")
 
-    if subtotal >= Decimal("50.00"):
+    if subtotal >= Decimal("100.00"):
         return Decimal("0.00")
 
-    return Decimal("5.00")
+    if subtotal >= Decimal("60.00"):
+        return Decimal("6.50")
+
+    return Decimal("15.00")
 
 
 def calculate_tax(amount: Decimal, tax_rate: Decimal | int | str = Decimal("0.10")) -> Decimal:
