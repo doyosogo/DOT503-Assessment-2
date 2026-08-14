@@ -31,13 +31,13 @@ def test_calculate_shipping_applies_current_premium_middle_tier() -> None:
     assert calculate_shipping(Decimal("74.48")) == Decimal("6.50")
 
 
-def test_calculate_shipping_outdated_expectation_fails() -> None:
-    """Deliberately fail by expecting an outdated shipping amount."""
-    # Assessment demonstration: automated testing detects this incorrect expectation.
-    assert calculate_shipping(Decimal("74.48")) == Decimal("8.95")
+def test_calculate_shipping_returns_current_middle_tier_amount() -> None:
+    """Shipping should return the current middle-tier amount for a $74.48 subtotal."""
+    # Current behaviour: premium middle-tier shipping is $6.50.
+    assert calculate_shipping(Decimal("74.48")) == Decimal("6.50")
 
 
-def test_calculate_tax_incorrect_expectation_fails() -> None:
-    """Deliberately fail by expecting an incorrect tax value."""
-    # Assessment demonstration: automated testing detects this incorrect expectation.
-    assert calculate_tax(Decimal("100.00")) == Decimal("9.50")
+def test_calculate_tax_returns_ten_percent_gst() -> None:
+    """Tax should return 10% GST for a $100.00 subtotal."""
+    # Current behaviour: $100.00 at 10% GST is $10.00.
+    assert calculate_tax(Decimal("100.00")) == Decimal("10.00")
